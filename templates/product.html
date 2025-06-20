@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>{%PRODUCTNAME%} — EcoSmart</title>
+    <title>{%ARTICLE%} — EcoSmart</title>
+
 
     <style>
       :root {
@@ -289,6 +290,11 @@
           gap: 2rem;
         }
       }
+
+      .product__eco-badge:empty {
+        display: none;
+      }
+
     </style>
   </head>
 
@@ -308,30 +314,16 @@
       <div class="product {%NOT_ECO%}">
         <div class="product__grid">
           <div class="product__img-container">
-            <img src="{%IMAGE%}" alt="{%PRODUCTNAME%}" class="product__img">
-            <div class="product__eco-badge">Eco-Friendly</div>
+            <img src="{%IMAGE%}" alt="{%ARTICLE%}" class="product__img">
+            <div class="product__eco-badge">{%POPULAR%}</div>
           </div>
           <div class="product__content">
-            <h1 class="product__title">{%PRODUCTNAME%}</h1>
-            <p class="product__company">{%FROM%}</p>
-            <div class="product__savings">Saves up to {%ENERGY_SAVINGS%} energy</div>
-            <p class="product__description">{%DESCRIPTION%}</p>
+            <h1 class="product__title">{%ARTICLE%}</h1>
+            <p class="product__company">By {%AUTHOR%} on {%DATE%}</p>
+            <div class="product__savings">Theme: {%THEME%}</div>
+            <p class="product__description">{%TEXT%}</p>
             
-            <div class="product__meta">
-              <div class="product__meta-item">
-                <span class="product__meta-label">Quantity</span>
-                <span class="product__meta-value">{%QUANTITY%}</span>
-              </div>
-              <div class="product__meta-item">
-                <span class="product__meta-label">Energy Efficiency</span>
-                <span class="product__meta-value">{%SPECIFICATIONS%}</span>
-              </div>
-            </div>
             
-            <div class="product__price-row">
-              <div class="product__price">${%PRICE%}</div>
-              <a href="#" class="product__btn">Add to Cart</a>
-            </div>
           </div>
         </div>
       </div>

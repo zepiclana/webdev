@@ -1,8 +1,14 @@
-import http from "http"
+import http from "http";
 import fs from "fs"
 import { fileURLToPath } from "url"
 import path from "path"
 import { dirname } from "path"
+import slugify from "slugify";
+
+const title = "Članci o energetskoj efikasnosti";
+const slug = slugify(title, {lower: true, strict: true});
+
+console.log(slug);
 
 // Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url)
@@ -18,22 +24,23 @@ const tempCard = fs.readFileSync(path.join(__dirname, "templates", "card.html"),
 const tempProduct = fs.readFileSync(path.join(__dirname, "templates", "product.html"), "utf-8")
 
 // Replace template placeholders with actual data
-const replaceTemplate = (temp, product) => {
-  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName)
-  output = output.replace(/{%IMAGE%}/g, product.image)
-  output = output.replace(/{%PRICE%}/g, product.price)
-  output = output.replace(/{%FROM%}/g, product.from)
-  output = output.replace(/{%ENERGY_SAVINGS%}/g, product.energySavings)
-  output = output.replace(/{%SPECIFICATIONS%}/g, product.specifications)
-  output = output.replace(/{%QUANTITY%}/g, product.quantity)
-  output = output.replace(/{%DESCRIPTION%}/g, product.description)
-  output = output.replace(/{%ID%}/g, product.id)
+const replaceTemplate = (temp, article) => {
+ let output = temp.replace(/{%ARTICLE%}/g, article.article);
+  output = output.replace(/{%AUTHOR%}/g, article.author);
+  output = output.replace(/{%DATE%}/g, article.date);
+  output = output.replace(/{%TEXT%}/g, article.text);
+  output = output.replace(/{%IMAGE%}/g, article.image);
+  output = output.replace(/{%THEME%}/g, article.theme);
+  output = output.replace(/{%ID%}/g, article.id);
+  output = output.replace(/{%POPULAR%}/g, article.popular ? "popular" : "");
+  const badgeHTML = article.popular 
+    ? `<div class="card__eco-badge">Popular</div>` 
+    : "";
+  output = output.replace(/{%POPULAR_BADGE%}/g, badgeHTML);
 
-  if (!product.eco) output = output.replace(/{%NOT_ECO%}/g, "not-eco")
-  else output = output.replace(/{%NOT_ECO%}/g, "")
+  return output;
+};
 
-  return output
-}
 
 // Create server
 const server = http.createServer((req, res) => {
@@ -52,11 +59,11 @@ const server = http.createServer((req, res) => {
 
     // Product page
   } else if (pathname === "/product") {
-    res.writeHead(200, { "Content-type": "text/html" })
-    const product = dataObj[query.id]
-    const output = replaceTemplate(tempProduct, product)
+  res.writeHead(200, { "Content-type": "text/html" })
+  const article = dataObj[query.id]
+  const output = replaceTemplate(tempProduct, article)
 
-    res.end(output)
+  res.end(output)
 
     // API
   } else if (pathname === "/api") {
